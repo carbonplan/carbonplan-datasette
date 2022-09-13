@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -21,10 +24,32 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Download data
+        env:
+          BUCKET: 'https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling'
         run: |
           mkdir -p data && cd data
-          curl https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/{CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz,CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz} -o "#1.csv.gz"
+          curl --remote-name-all "$BUCKET/CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz $BUCKET/CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz"
 
       - name: List downloaded data
         run: |
           ls -ltrh data
+
+      - name: Create database
+        run: |
+          csvs-to-sqlite data/*.csv.gz cmip6-downscaling.db
+          sqlite-utils analyze-tables cmip6-downscaling.db --save
+
+      - name: deploy
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |-
+          export LATEST_DATASETTE=`curl -s "https://api.github.com/repos/simonw/datasette/commits/main" | jq -r .sha`
+          datasette publish fly cmip6-downscaling.db --app carbonplan-datasette \
+           --extra-options='--setting max_returned_rows 10000' \
+           --install=datasette-publish-fly \
+           --install=datasette-vega \
+           --install=datasette-jellyfish \
+           --install=datasette-graphql \
+           --install='datasette-copyable>=0.2' \
+           --version-note=$LATEST_DATASETTE \
+           --branch=$LATEST_DATASETTE
