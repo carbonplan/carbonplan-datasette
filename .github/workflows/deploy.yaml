@@ -19,3 +19,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+
+      - name: Download data
+        run: |
+          mkdir -p data && cd data
+          curl https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/{CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz,CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz} -o "#1.csv.gz"
+
+      - name: List downloaded data
+        run: |
+          ls -ltrh data
