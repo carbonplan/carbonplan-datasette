@@ -24,9 +24,20 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Download data
-        run: |
+        run: |-
           mkdir -p data && cd data
-          curl --remote-name-all https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz
+          curl --remote-name-all  \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.MRI.MRI-ESM2-0.historical.day.DeepSD-BC.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.MRI.MRI-ESM2-0.historical.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.BCC.BCC-CSM2-MR.ssp245.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.BCC.BCC-CSM2-MR.ssp585.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.CCCma.CanESM5.ssp245.day.DeepSD-BC.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.DKRZ.MPI-ESM1-2-HR.ssp585.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.MIROC.MIROC6.ssp585.day.GARD-SV.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.MRI.MRI-ESM2-0.ssp370.day.DeepSD.csv.gz \
+          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/ScenarioMIP.MRI.MRI-ESM2-0.ssp370.day.GARD-SV.csv.gz
 
       - name: List downloaded data
         run: |
