@@ -1,0 +1,9 @@
+csvs-to-sqlite
+Markdown>=2.6.11
+datasette>=0.57
+datasette-graphql
+datasette-vega
+datasette-jellyfish
+datasette-copyable
+sqlite-utils>=3.1
+pandas
