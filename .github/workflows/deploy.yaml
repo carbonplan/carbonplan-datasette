@@ -24,11 +24,9 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Download data
-        env:
-          BUCKET: 'https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling'
         run: |
           mkdir -p data && cd data
-          curl --remote-name-all "$BUCKET/CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz $BUCKET/CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz"
+          curl --remote-name-all https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.day.DeepSD-BC.csv.gz https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.BCC.BCC-CSM2-MR.historical.day.GARD-SV.csv.gz
 
       - name: List downloaded data
         run: |
