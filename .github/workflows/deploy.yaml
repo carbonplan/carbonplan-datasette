@@ -55,10 +55,14 @@ jobs:
           export LATEST_DATASETTE=`curl -s "https://api.github.com/repos/simonw/datasette/commits/main" | jq -r .sha`
           datasette install datasette-publish-fly
           datasette publish fly cmip6-downscaling.db --app carbonplan-datasette \
+           -m metadata.json \
            --extra-options='--setting max_returned_rows 3000' \
            --install=datasette-vega \
            --install=datasette-jellyfish \
            --install=datasette-graphql \
            --install='datasette-copyable>=0.2' \
+           --install=datasette-nteract-data-explorer \
+           --install=datasette-dashboards \
+           --install=datasette-export-notebook \
            --version-note=$LATEST_DATASETTE \
            --branch=$LATEST_DATASETTE
