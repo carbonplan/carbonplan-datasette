@@ -48,6 +48,10 @@ jobs:
           csvs-to-sqlite data/*.csv.gz cmip6-downscaling.db
           sqlite-utils analyze-tables cmip6-downscaling.db --save
 
+      - name: Build metadata
+        run: |
+          python make_metadata.py
+
       - name: deploy
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
