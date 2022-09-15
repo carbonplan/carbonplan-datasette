@@ -3,6 +3,7 @@ import pathlib
 import textwrap
 
 import markdown
+import pandas as pd
 
 
 def cmip6_meta(current_dir):
@@ -14,7 +15,7 @@ def cmip6_meta(current_dir):
         # CMIP.CCCma.CanESM5.historical.r1i1p1f1.day.DeepSD-BC.pr
         key = pathlib.Path(name).stem
         _, _, model, scenario, member_id, timescale, downscaling_method, variable = key.split('.')
-
+        df = pd.read_csv(file)
         text = textwrap.dedent(
             f"""
             ## Overview
@@ -25,7 +26,8 @@ def cmip6_meta(current_dir):
 
             - **General Circulation Model (GCM)**: {model}
             - **Scenario**: {scenario}
-            - **Timescale**: {timescale}
+            - **Frequency**: {timescale}
+            - **Temporal extent**: {df.time.min()} to {df.time.max()}
             - **Downscaling method**: {downscaling_method}
             - **Variable**: {variable}
 
