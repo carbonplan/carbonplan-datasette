@@ -5,7 +5,7 @@ import pathlib
 def run():
 
     current_dir = pathlib.Path(__file__).parent.absolute()
-    data_dir = current_dir / 'data'
+    data_dir = current_dir / 'data' / 'cmip6-downscaling'
     files = sorted(data_dir.glob('*.csv.gz'))
     tables = {file.stem: {'description_html': '', 'source_url': ''} for file in files}
 
