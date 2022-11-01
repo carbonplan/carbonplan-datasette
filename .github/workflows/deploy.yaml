@@ -28,12 +28,12 @@ jobs:
           mkdir -p data/cmip6-downscaling
           mkdir -p data/cdr-database
 
-      - name: Download CDR database
-        shell: python
-        run: |
-          import pandas as pd
-          df = pd.read_csv("https://carbonplan.org/research/cdr-database/projects.csv", skiprows=8)
-          df.to_csv("data/cdr-database/projects.csv", index=False)
+      # - name: Download CDR database
+      #   shell: python
+      #   run: |
+      #     import pandas as pd
+      #     df = pd.read_csv("https://carbonplan.org/research/cdr-database/projects.csv", skiprows=8)
+      #     df.to_csv("data/cdr-database/projects.csv", index=False)
       - name: Download data
         run: |-
           cd data/cmip6-downscaling
@@ -51,10 +51,10 @@ jobs:
           csvs-to-sqlite data/cmip6-downscaling/*.csv.gz cmip6-downscaling.db
           sqlite-utils analyze-tables cmip6-downscaling.db --save
 
-      - name: Create CDR database
-        run: |
-          csvs-to-sqlite data/cdr-database/*.csv cdr-database.db
-          sqlite-utils analyze-tables cdr-database.db --save
+      # - name: Create CDR database
+      #   run: |
+      #     csvs-to-sqlite data/cdr-database/*.csv cdr-database.db
+      #     sqlite-utils analyze-tables cdr-database.db --save
 
       - name: Build metadata
         run: |
@@ -66,15 +66,15 @@ jobs:
         run: |-
           export LATEST_DATASETTE=`curl -s "https://api.github.com/repos/simonw/datasette/commits/main" | jq -r .sha`
           datasette install datasette-publish-fly
-          datasette publish fly cdr-database.db cmip6-downscaling.db --app carbonplan-datasette \
+          datasette publish fly cmip6-downscaling.db --app carbonplan-datasette \
            -m metadata.json \
            --extra-options='--setting max_returned_rows 3000' \
-           --install=datasette-vega \
            --install=datasette-jellyfish \
            --install=datasette-graphql \
            --install='datasette-copyable>=0.2' \
            --install=datasette-nteract-data-explorer \
-           --install=datasette-dashboards \
-           --install=datasette-export-notebook \
+          #  --install=datasette-dashboards \
+          #  --install=datasette-export-notebook \
+          #  --install=datasette-vega \
            --version-note=$LATEST_DATASETTE \
            --branch=$LATEST_DATASETTE

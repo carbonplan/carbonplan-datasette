@@ -56,9 +56,12 @@ def cmip6_meta(current_dir):
 
     ## Overview
 
-    Downscaled climate projections from the Coupled Model Intercomparison Project Phase 6 (CMIP6)
-    for climate impacts analysis and planning.This dataset includes results from multiple downscaling
-    methods to support uncertainty estimation.
+    This page allows you to download downscaled climate change timeseries at 107 cities around the globe in CSV format.
+
+    Downscaled climate projections from the Coupled Model Intercomparison Project Phase 6 (CMIP6) for climate impacts
+    analysis and planning.This dataset includes results from multiple downscaling methods to
+    support uncertainty estimation.
+
 
     ## Metadata
 
@@ -66,8 +69,8 @@ def cmip6_meta(current_dir):
     - **Spatial coverage**: global
     - **Temporal resolution**: daily, plus monthly and annual aggregations
     - **Last updated**: 2022-09-01
-    - **License**: CC-BY-SA (subsets available under CC-BY)
-    - **Available formats**: CSVs (point locations), Zarr (complete data)
+    - **License**: CC-BY-4.0
+    - **Available formats**: CSVs (point locations)
     - **Tags**: `climate`, `risks`
 
     ## Relevant resources
@@ -81,7 +84,7 @@ def cmip6_meta(current_dir):
     cmip6_html = markdown.markdown(cmip6_text, extensions=['markdown.extensions.tables'])
 
     return {
-        'title': 'Global downscaled CMIP6',
+        'title': 'Downscaled CMIP6 Data',
         'description_html': cmip6_html,
         'tables': tables,
     }
@@ -132,7 +135,7 @@ def run():
         'about_url': 'https://carbonplan.org/data',
         'databases': {
             'cmip6-downscaling': cmip6_meta(current_dir),
-            'cdr-database': cdr_database_meta(),
+            # 'cdr-database': cdr_database_meta(),
         },
     }
     with open(current_dir / 'metadata.json', 'w') as f:
