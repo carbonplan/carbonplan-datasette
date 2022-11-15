@@ -10,3 +10,6 @@ datasette-dashboards
 datasette-export-notebook
 sqlite-utils>=3.1
 pandas
+datasette-search-all
+universal_pathlib
+s3fs

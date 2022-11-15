@@ -23,42 +23,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Create data directory
-        run: |
-          mkdir -p data/cmip6-downscaling
-          mkdir -p data/cdr-database
-
-      # - name: Download CDR database
-      #   shell: python
-      #   run: |
-      #     import pandas as pd
-      #     df = pd.read_csv("https://carbonplan.org/research/cdr-database/projects.csv", skiprows=8)
-      #     df.to_csv("data/cdr-database/projects.csv", index=False)
-      - name: Download data
-        run: |-
-          cd data/cmip6-downscaling
-          curl --remote-name-all  \
-          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.r1i1p1f1.day.DeepSD-BC.pr.csv.gz \
-          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.r1i1p1f1.day.DeepSD-BC.tasmax.csv.gz \
-          https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/CMIP.CCCma.CanESM5.historical.r1i1p1f1.day.DeepSD-BC.tasmin.csv.gz
-
-      - name: List downloaded data
-        run: |
-          tree data
-
-      - name: Create CMIP6 Downscaling database
-        run: |
-          csvs-to-sqlite data/cmip6-downscaling/*.csv.gz cmip6-downscaling.db
-          sqlite-utils analyze-tables cmip6-downscaling.db --save
-
-      # - name: Create CDR database
-      #   run: |
-      #     csvs-to-sqlite data/cdr-database/*.csv cdr-database.db
-      #     sqlite-utils analyze-tables cdr-database.db --save
-
       - name: Build metadata
         run: |
-          python make_metadata.py
+          python build_database.py
 
       - name: deploy
         env:
@@ -73,6 +40,7 @@ jobs:
            --install=datasette-graphql \
            --install='datasette-copyable>=0.2' \
            --install=datasette-nteract-data-explorer \
+           --install datasette-search-all \
           #  --install=datasette-dashboards \
           #  --install=datasette-export-notebook \
           #  --install=datasette-vega \
