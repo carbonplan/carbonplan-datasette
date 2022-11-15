@@ -133,7 +133,7 @@ if __name__ == '__main__':
     storage_options = {'anon': True}
     root = upath.UPath('s3://carbonplan-share/datasette/cmip6-downscaling', **storage_options)
 
-    files = sorted(root.glob('*.csv.gz'))[:2]
+    files = sorted(root.glob('*.csv.gz'))[:20]
     tables = [file.stem for file in files]
     paths = [f'https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/{file.name}' for file in files]
     command = f"csvs-to-sqlite {' '.join(paths)} {database_path}"
