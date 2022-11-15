@@ -14,6 +14,12 @@ current_dir = pathlib.Path(__file__).parent.absolute()
 
 fts_columns = ['cities', 'time']
 
+columns = {
+    'pr': {'pr': 'Precipitation (mm)', 'time': 'Time', 'lat': 'Latitude', 'lon': 'Longitude', 'cities': 'Name of the city'},
+    'tasmax': {'tasmax': 'Maximum temperature (K)', 'time': 'Time', 'lat': 'Latitude', 'lon': 'Longitude', 'cities': 'Name of the city'},
+    'tasmin': {'tasmin': 'Minimum temperature (C)', 'time': 'Time', 'lat': 'Latitude', 'lon': 'Longitude', 'cities': 'Name of the city'},
+}
+
 current_dir = pathlib.Path(__file__).parent.absolute()
 database_path = (current_dir / 'cmip6-downscaling.db').absolute().as_posix()
 data_dir = current_dir / 'data' / 'cmip6-downscaling'
@@ -61,7 +67,7 @@ def make_metadata(*, tables, cities, time_min, time_max):
             """
         )
 
-        db_tables[table] = {'description_html': markdown.markdown(text, extensions=extensions), 'facets': ['cities']}
+        db_tables[table] = {'description_html': markdown.markdown(text, extensions=extensions), 'facets': ['cities'], 'columns': columns[variable]}
 
     cmip6_text = textwrap.dedent(
         f'''
@@ -131,17 +137,18 @@ if __name__ == '__main__':
     tables = [file.stem for file in files]
     paths = [f'https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/{file.name}' for file in files]
     command = f"csvs-to-sqlite {' '.join(paths)} {database_path}"
-    subprocess.check_output(command, shell=True)
-    configure_full_text_search(database=database_path, tables=tables, columns=fts_columns)
+    # subprocess.check_output(command, shell=True)
+    # configure_full_text_search(database=database_path, tables=tables, columns=fts_columns)
 
-    # # Optimize index usage and optimize database
-    command = f'sqlite-utils analyze-tables {database_path} --save'
-    subprocess.check_output(command, shell=True)
-    command = f'sqlite-utils vacuum {database_path}'
-    subprocess.check_output(command, shell=True)
+    # # # Optimize index usage and optimize database
+    # print('Optimizing database')
+    # command = f'sqlite-utils analyze-tables {database_path} --save'
+    # subprocess.check_output(command, shell=True)
+    # command = f'sqlite-utils vacuum {database_path}'
+    # subprocess.check_output(command, shell=True)
 
     # Make metadata
-
+    print('Making metadata')
     df = pd.read_csv(files[0])
     cities = sorted(df.cities.unique().tolist())
     time_min = df.time.min()
