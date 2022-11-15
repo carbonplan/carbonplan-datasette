@@ -131,7 +131,7 @@ if __name__ == '__main__':
     tables = [file.stem for file in files]
     paths = [f'https://carbonplan-share.s3.us-west-2.amazonaws.com/datasette/cmip6-downscaling/{file.name}' for file in files]
     command = f"csvs-to-sqlite {' '.join(paths)} {database_path}"
-    # subprocess.check_output(command, shell=True)
+    subprocess.check_output(command, shell=True)
     configure_full_text_search(database=database_path, tables=tables, columns=fts_columns)
 
     # # Optimize index usage and optimize database
