@@ -122,7 +122,9 @@ def make_metadata(*, tables, cities, time_min, time_max):
 
 
 if __name__ == '__main__':
-    root = upath.UPath('s3://carbonplan-share/datasette/cmip6-downscaling')
+
+    storage_options = {'anon': True}
+    root = upath.UPath('s3://carbonplan-share/datasette/cmip6-downscaling', **storage_options)
 
     files = sorted(root.glob('*.csv.gz'))[:2]
     tables = [file.stem for file in files]
